@@ -19,6 +19,7 @@
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Configure the HTTP request pipeline
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
