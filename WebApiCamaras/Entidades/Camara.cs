@@ -1,4 +1,6 @@
-﻿namespace WebApiCamaras.Entidades
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
+namespace WebApiCamaras.Entidades
 {
     public class Camara
     {
@@ -9,5 +11,7 @@
         public string tipo { get; set; }
         public string descripcion{ get; set; }
         public bool estado { get; set; }
+        public int idArea { get; set; }
+        public Area area { get; set; }
     }
 }
