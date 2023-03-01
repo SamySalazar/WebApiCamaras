@@ -21,7 +21,17 @@ namespace WebApiCamaras.Controllers
                     resolucion = "1920x1080",
                     tipo = "Interior",
                     descripcion = "Lente de 2.0 mm. Audio de 2 Vías. Detección de movimiento. Alimentación 5 VDC, interfase mirco USB.",
-                    estado = true
+                    estado = true,
+                    idArea = 1,
+                    area = new Area()
+                    {
+                        id = 1,
+                        nombre = "Vestíbulo",
+                        descripcion = "Habitación inmediata a la puerta principal",
+                        coordenadas = "41°24'12.2\"N",
+                        dimensiones = "5m x 6m",
+                        nivielRiesgo = "Bajo"
+                    }
                 },
                 new Camara()
                 { 
@@ -31,7 +41,17 @@ namespace WebApiCamaras.Controllers
                     resolucion = "1920x1080",
                     tipo = "Exterior",
                     descripcion = "Lente de 2.8 mm. Detección de movimiento. Alimentación 12 VDC.",
-                    estado = true 
+                    estado = true,
+                    idArea = 1,
+                    area = new Area()
+                    {
+                        id = 1,
+                        nombre = "Vestíbulo",
+                        descripcion = "Habitación inmediata a la puerta principal",
+                        coordenadas = "41°24'12.2\"N",
+                        dimensiones = "5m x 6m",
+                        nivielRiesgo = "Bajo"
+                    }
                 },
                 new Camara()
                 {
@@ -41,7 +61,17 @@ namespace WebApiCamaras.Controllers
                     resolucion = "2688x1520",
                     tipo = "Interior",
                     descripcion = "Lente de 2.8 mm. Audio de 2 Vías. Detección de movimiento. Alimentación 12 VDC.",
-                    estado = true
+                    estado = true,
+                    idArea = 1,
+                    area = new Area()
+                    {
+                        id = 1,
+                        nombre = "Vestíbulo",
+                        descripcion = "Habitación inmediata a la puerta principal",
+                        coordenadas = "41°24'12.2\"N",
+                        dimensiones = "5m x 6m",
+                        nivielRiesgo = "Bajo"
+                    }
                 }
             };
         }
