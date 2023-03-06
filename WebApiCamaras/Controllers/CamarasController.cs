@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.Reflection.Metadata.Ecma335;
 using WebApiCamaras.Entidades;
 
@@ -8,72 +10,74 @@ namespace WebApiCamaras.Controllers
     [Route("api/camaras")]
     public class CamarasController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<List<Camara>> Get()
+        private readonly ApplicationDbContext dbContext;
+
+        public CamarasController(ApplicationDbContext dbContext)
         {
-            return new List<Camara>()
+            this.dbContext = dbContext;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Camara>>> GetAll()
+        {
+            return await dbContext.Camaras.Include(x => x.area).ToListAsync();
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Camara>> GetById (int id)
+        {
+            return await dbContext.Camaras.FirstOrDefaultAsync(x => x.id == id);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post (Camara camara)
+        {
+            var existArea = await dbContext.Areas.AnyAsync(x => x.id == camara.areaId);
+
+            if (!existArea)
             {
-                new Camara()
-                {
-                    id = 1,
-                    modelo = "IPC-C120-D",
-                    marca = "HIKVISION",
-                    resolucion = "1920x1080",
-                    tipo = "Interior",
-                    descripcion = "Lente de 2.0 mm. Audio de 2 Vías. Detección de movimiento. Alimentación 5 VDC, interfase mirco USB.",
-                    estado = true,
-                    idArea = 1,
-                    area = new Area()
-                    {
-                        id = 1,
-                        nombre = "Vestíbulo",
-                        descripcion = "Habitación inmediata a la puerta principal",
-                        coordenadas = "41°24'12.2\"N",
-                        dimensiones = "5m x 6m",
-                        nivielRiesgo = "Bajo"
-                    }
-                },
-                new Camara()
-                { 
-                    id = 2, 
-                    modelo = "IPC-B121H", 
-                    marca = "HIKVISION", 
-                    resolucion = "1920x1080",
-                    tipo = "Exterior",
-                    descripcion = "Lente de 2.8 mm. Detección de movimiento. Alimentación 12 VDC.",
-                    estado = true,
-                    idArea = 1,
-                    area = new Area()
-                    {
-                        id = 1,
-                        nombre = "Vestíbulo",
-                        descripcion = "Habitación inmediata a la puerta principal",
-                        coordenadas = "41°24'12.2\"N",
-                        dimensiones = "5m x 6m",
-                        nivielRiesgo = "Bajo"
-                    }
-                },
-                new Camara()
-                {
-                    id = 3,
-                    modelo = "DS-2CD2443G2-I",
-                    marca = "HIKVISION",
-                    resolucion = "2688x1520",
-                    tipo = "Interior",
-                    descripcion = "Lente de 2.8 mm. Audio de 2 Vías. Detección de movimiento. Alimentación 12 VDC.",
-                    estado = true,
-                    idArea = 1,
-                    area = new Area()
-                    {
-                        id = 1,
-                        nombre = "Vestíbulo",
-                        descripcion = "Habitación inmediata a la puerta principal",
-                        coordenadas = "41°24'12.2\"N",
-                        dimensiones = "5m x 6m",
-                        nivielRiesgo = "Bajo"
-                    }
-                }
-            };
+                return BadRequest($"No existe el Área con el id: {camara.areaId}");
+            }
+
+            dbContext.Add(camara);
+            await dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put (Camara camara, int id)
+        {
+            var exist = await dbContext.Camaras.AnyAsync(x => x.id == camara.id);
+
+            if (!exist)
+            {
+                return NotFound("La camara especificada no existe.");
+            }
+            if (camara.id != id)
+            {
+                return BadRequest("El id de la camara no coincide con el establecido en la url.");
+            }
+
+            dbContext.Update(camara);
+            await dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete (int id)
+        {
+            var exist = await dbContext.Camaras.AnyAsync(x => x.id == id);
+
+            if (!exist)
+            {
+                return NotFound("E Recurso no fue econtrado.");
+            }
+
+            // var validateRelation = await dbContext.CamaraArea.AnyAsync
+
+            dbContext.Remove(new Camara { id = id });
+            await dbContext.SaveChangesAsync();
+            return Ok();
         }
     }
 }
