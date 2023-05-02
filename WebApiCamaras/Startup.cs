@@ -1,4 +1,10 @@
-﻿namespace WebApiCamaras
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.Security.Cryptography.Xml;
+using System.Text.Json.Serialization;
+
+namespace WebApiCamaras
 {
     public class Startup
     {
@@ -8,13 +14,22 @@
         }
 
         public IConfiguration Configuration { get; }
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        {            
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+            );
+
+            services.AddDbContext<ApplicationDbContext>(options => 
+            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPICamaras", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

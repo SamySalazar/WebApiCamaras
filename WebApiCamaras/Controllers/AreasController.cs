@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApiCamaras.Entidades;
 
 namespace WebApiCamaras.Controllers
@@ -7,54 +8,61 @@ namespace WebApiCamaras.Controllers
     [Route("api/areas")]
     public class AreasController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<List<Area>> Get()
+        private ApplicationDbContext dbContext;
+
+        public AreasController(ApplicationDbContext context)
         {
-            return new List<Area>()
+            this.dbContext = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Area>>> Get()
+        {
+            return await dbContext.Areas.ToListAsync();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post(Area area)
+        {
+            dbContext.Add(area);
+            await dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPut("{id:int}")] // api/areas/1
+        public async Task<ActionResult> Put (Area area, int id)
+        {
+            if (area.Id != id)
             {
-                new Area()
-                {
-                    id = 1,
-                    nombre = "Vestíbulo",
-                    descripcion = "Habitación inmediata a la puerta principal",
-                    coordenadas = "41°24'12.2\"N",
-                    dimensiones = "5m x 6m",
-                    nivielRiesgo = "Bajo",
-                    camaras = new List<Camara>
-                    {
-                        new Camara()
-                        {
-                            id = 1,
-                            modelo = "IPC-C120-D",
-                            marca = "HIKVISION",
-                            resolucion = "1920x1080",
-                            tipo = "Interior",
-                            descripcion = "Lente de 2.0 mm. Audio de 2 Vías. Detección de movimiento. Alimentación 5 VDC, interfase mirco USB.",
-                            estado = true
-                        },
-                        new Camara()
-                        {
-                            id = 2,
-                            modelo = "IPC-B121H",
-                            marca = "HIKVISION",
-                            resolucion = "1920x1080",
-                            tipo = "Exterior",
-                            descripcion = "Lente de 2.8 mm. Detección de movimiento. Alimentación 12 VDC.",
-                            estado = true
-                        },
-                        new Camara()
-                        {
-                            id = 3,
-                            modelo = "DS-2CD2443G2-I",
-                            marca = "HIKVISION",
-                            resolucion = "2688x1520",
-                            tipo = "Interior",
-                            descripcion = "Lente de 2.8 mm. Audio de 2 Vías. Detección de movimiento. Alimentación 12 VDC.",
-                            estado = true
-                        }
-                    }
-                }
-            };
+                return BadRequest("El id del area no coincide con el establecido en la url");
+            }
+
+            var exist = await dbContext.Areas.AnyAsync(x => x.Id == id);
+            if (!exist)
+            {
+                return NotFound();
+            }
+
+            dbContext.Update(area);
+            await dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete (int id)
+        {
+            var exist = await dbContext.Areas.AnyAsync(x => x.Id == id);
+            if (!exist)
+            {
+                return NotFound();
+            }
+
+            dbContext.Remove(new Area() 
+            { 
+                Id = id 
+            });
+            await dbContext.SaveChangesAsync();
+            return Ok();
         }
     }
 }
