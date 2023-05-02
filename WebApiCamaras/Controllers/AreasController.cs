@@ -32,12 +32,12 @@ namespace WebApiCamaras.Controllers
         [HttpPut("{id:int}")] // api/areas/1
         public async Task<ActionResult> Put (Area area, int id)
         {
-            if (area.id != id)
+            if (area.Id != id)
             {
                 return BadRequest("El id del area no coincide con el establecido en la url");
             }
 
-            var exist = await dbContext.Areas.AnyAsync(x => x.id == id);
+            var exist = await dbContext.Areas.AnyAsync(x => x.Id == id);
             if (!exist)
             {
                 return NotFound();
@@ -51,7 +51,7 @@ namespace WebApiCamaras.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete (int id)
         {
-            var exist = await dbContext.Areas.AnyAsync(x => x.id == id);
+            var exist = await dbContext.Areas.AnyAsync(x => x.Id == id);
             if (!exist)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace WebApiCamaras.Controllers
 
             dbContext.Remove(new Area() 
             { 
-                id = id 
+                Id = id 
             });
             await dbContext.SaveChangesAsync();
             return Ok();

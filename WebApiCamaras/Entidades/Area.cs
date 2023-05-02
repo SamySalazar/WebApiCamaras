@@ -2,12 +2,12 @@
 {
     public class Area
     {
-        public int id { get; set; }
-        public string nombre { get; set; }
-        public string descripcion { get; set; }
-        public string coordenadas { get; set; }
-        public string dimensiones { get; set; }
-        public string nivielRiesgo { get; set; }
-        public List<Camara> camaras { get; set; }
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public string Coordenadas { get; set; }
+        public string Dimensiones { get; set; }
+        public string NivielRiesgo { get; set; }
+        public List<Camara> Camaras { get; set; }
     }
 }

@@ -20,23 +20,23 @@ namespace WebApiCamaras.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Camara>>> GetAll()
         {
-            return await dbContext.Camaras.Include(x => x.area).ToListAsync();
+            return await dbContext.Camaras.Include(x => x.Area).ToListAsync();
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Camara>> GetById (int id)
         {
-            return await dbContext.Camaras.FirstOrDefaultAsync(x => x.id == id);
+            return await dbContext.Camaras.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         [HttpPost]
         public async Task<ActionResult> Post (Camara camara)
         {
-            var existArea = await dbContext.Areas.AnyAsync(x => x.id == camara.areaId);
+            var existArea = await dbContext.Areas.AnyAsync(x => x.Id == camara.AreaId);
 
             if (!existArea)
             {
-                return BadRequest($"No existe el Área con el id: {camara.areaId}");
+                return BadRequest($"No existe el Área con el id: {camara.AreaId}");
             }
 
             dbContext.Add(camara);
@@ -47,13 +47,13 @@ namespace WebApiCamaras.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put (Camara camara, int id)
         {
-            var exist = await dbContext.Camaras.AnyAsync(x => x.id == camara.id);
+            var exist = await dbContext.Camaras.AnyAsync(x => x.Id == camara.Id);
 
             if (!exist)
             {
                 return NotFound("La camara especificada no existe.");
             }
-            if (camara.id != id)
+            if (camara.Id != id)
             {
                 return BadRequest("El id de la camara no coincide con el establecido en la url.");
             }
@@ -66,7 +66,7 @@ namespace WebApiCamaras.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete (int id)
         {
-            var exist = await dbContext.Camaras.AnyAsync(x => x.id == id);
+            var exist = await dbContext.Camaras.AnyAsync(x => x.Id == id);
 
             if (!exist)
             {
@@ -75,7 +75,7 @@ namespace WebApiCamaras.Controllers
 
             // var validateRelation = await dbContext.CamaraArea.AnyAsync
 
-            dbContext.Remove(new Camara { id = id });
+            dbContext.Remove(new Camara { Id = id });
             await dbContext.SaveChangesAsync();
             return Ok();
         }
