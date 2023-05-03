@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using WebApiCamaras.Validaciones;
 
 namespace WebApiCamaras.Entidades
 {
@@ -6,7 +7,7 @@ namespace WebApiCamaras.Entidades
     {
         public int Id { get; set; }
         public string Modelo { get; set; }
-        public string Marca { get; set; }
+        [FirstCharCapital] public string Marca { get; set; }
         public string Resolucion { get; set; }
         public string Tipo { get; set; }
         public string Descripcion{ get; set; }
