@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 using WebApiCamaras.Entidades;
+using WebApiCamaras.Filtros;
 using WebApiCamaras.Services;
 
 namespace WebApiCamaras.Controllers
 {
     [ApiController]
     [Route("api/areas")]
+    // [Authorize]
     // Ruta: api/[controller] -> [controller] toma el prefijo del nombre del controller
     public class AreasController : ControllerBase
     {
@@ -35,6 +38,8 @@ namespace WebApiCamaras.Controllers
         }
 
         [HttpGet("GUID")]
+        //[ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(FiltroDeAccion))]
         public ActionResult ObtenerGuids()
         {
             return Ok(new
@@ -51,8 +56,12 @@ namespace WebApiCamaras.Controllers
         [HttpGet] // Ruta: api/areas
         [HttpGet("listado")] // Ruta: api/areas/listado
         [HttpGet("/listado")] // Ruta: listado
+        [ServiceFilter(typeof(FiltroDeAccion))]
+        //[ResponseCache(Duration = 10)]
+        // [Authorize]
         public async Task<ActionResult<List<Area>>> Get()
         {
+            throw new NotImplementedException();
             logger.LogInformation("Estamos obteniendo las areas");
             logger.LogWarning("Este es un mensaje de prueba Warning");
             return await dbContext.Areas.Include(x => x.Camaras).ToListAsync();

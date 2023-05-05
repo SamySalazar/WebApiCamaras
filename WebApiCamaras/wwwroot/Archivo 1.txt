@@ -1,0 +1,16 @@
+Proceso iniciado
+Proceso en ejecución: 05/05/2023 03:15:39
+Proceso en ejecución: 05/05/2023 03:15:44
+Proceso en ejecución: 05/05/2023 03:15:49
+Proceso en ejecución: 05/05/2023 03:15:54
+Proceso en ejecución: 05/05/2023 03:15:59
+Proceso en ejecución: 05/05/2023 03:16:04
+Proceso en ejecución: 05/05/2023 03:16:09
+Proceso en ejecución: 05/05/2023 03:16:14
+Proceso en ejecución: 05/05/2023 03:16:19
+Proceso en ejecución: 05/05/2023 03:16:24
+Proceso en ejecución: 05/05/2023 03:16:29
+Proceso en ejecución: 05/05/2023 03:16:34
+Proceso en ejecución: 05/05/2023 03:16:39
+Proceso en ejecución: 05/05/2023 03:16:44
+Proceso finalizado
