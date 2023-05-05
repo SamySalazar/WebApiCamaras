@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 using WebApiCamaras.Entidades;
+using WebApiCamaras.Services;
 
 namespace WebApiCamaras.Controllers
 {
@@ -10,10 +12,40 @@ namespace WebApiCamaras.Controllers
     public class AreasController : ControllerBase
     {
         private ApplicationDbContext dbContext;
+        private readonly IService service;
+        private readonly ServiceTransient serviceTransient;
+        private readonly ServiceScoped serviceScoped;
+        private readonly ServiceSingleton serviceSingleton;
+        private readonly ILogger<AreasController> logger;
 
-        public AreasController(ApplicationDbContext context)
+        public AreasController(
+            ApplicationDbContext context,
+            IService service,
+            ServiceTransient serviceTransient,
+            ServiceScoped serviceScoped,
+            ServiceSingleton serviceSingleton,
+            ILogger<AreasController> logger)
         {
             this.dbContext = context;
+            this.service = service;
+            this.serviceTransient = serviceTransient;
+            this.serviceScoped = serviceScoped;
+            this.serviceSingleton = serviceSingleton;
+            this.logger = logger;
+        }
+
+        [HttpGet("GUID")]
+        public ActionResult ObtenerGuids()
+        {
+            return Ok(new
+            {
+                AreasControllerTransient = serviceTransient.Guid,
+                ServiceA_Transient = service.GetTransient(),
+                AreasControllerScoped = serviceScoped.Guid,
+                ServiceA_Scoped = service.GetScoped(),
+                AreasControllerSingleton = serviceSingleton.Guid,                                
+                ServiceA_Singleton = service.GetSingleton()
+            });
         }
 
         [HttpGet] // Ruta: api/areas
@@ -21,6 +53,8 @@ namespace WebApiCamaras.Controllers
         [HttpGet("/listado")] // Ruta: listado
         public async Task<ActionResult<List<Area>>> Get()
         {
+            logger.LogInformation("Estamos obteniendo las areas");
+            logger.LogWarning("Este es un mensaje de prueba Warning");
             return await dbContext.Areas.Include(x => x.Camaras).ToListAsync();
         }
 
